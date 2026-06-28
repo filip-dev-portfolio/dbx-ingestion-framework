@@ -1,0 +1,90 @@
+{
+  "name": "j_customer",
+  "email_notifications": {
+    "no_alert_for_skipped_runs": false
+  },
+  "webhook_notifications": {},
+  "timeout_seconds": 0,
+  "max_concurrent_runs": 1,
+  "tasks": [
+    {
+      "task_key": "t_b_customer",
+      "run_if": "ALL_SUCCESS",
+      "notebook_task": {
+        "notebook_path": "/Repos/filipshahanski@gmail.com/dbx-ingestion-framework/notebooks/Bronze/bronze_nb",
+        "base_parameters": {
+          "env": "dev",
+          "jobRunId": "{{jobRunId}}",
+          "taskRunId": "{{taskRunId}}",
+          "workflowId": "f51e7d02-795f-4d59-bef9-ce62282f39ee"
+        },
+        "source": "WORKSPACE"
+      },
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "webhook_notifications": {},
+      "environment_key": "Default",
+      "disabled": false
+    },
+    {
+      "task_key": "t_s_customer",
+      "depends_on": [
+        {
+          "task_key": "t_b_customer"
+        }
+      ],
+      "run_if": "ALL_SUCCESS",
+      "notebook_task": {
+        "notebook_path": "/Repos/filipshahanski@gmail.com/dbx-ingestion-framework/notebooks/Silver/silver_nb",
+        "base_parameters": {
+          "env": "dev",
+          "workflowId": "f51e7d02-795f-4d59-bef9-ce62282f39ee",
+          "jobRunId": "{{jobRunId}}",
+          "taskRunId": "{{taskRunId}}"
+        },
+        "source": "WORKSPACE"
+      },
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "webhook_notifications": {},
+      "environment_key": "Default",
+      "disabled": false
+    },
+    {
+      "task_key": "t_g_customer",
+      "depends_on": [
+        {
+          "task_key": "t_s_customer"
+        }
+      ],
+      "run_if": "ALL_SUCCESS",
+      "notebook_task": {
+        "notebook_path": "/Repos/filipshahanski@gmail.com/dbx-ingestion-framework/notebooks/Gold/gold_nb",
+        "base_parameters": {
+          "env": "dev",
+          "jobRunId": "{{jobRunId}}",
+          "taskRunId": "{{taskRunId}}",
+          "workflowId": "f51e7d02-795f-4d59-bef9-ce62282f39ee"
+        },
+        "source": "WORKSPACE"
+      },
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "environment_key": "Default",
+      "disabled": false
+    }
+  ],
+  "format": "MULTI_TASK",
+  "queue": {
+    "enabled": true
+  },
+  "environments": [
+    {
+      "environment_key": "Default",
+      "spec": {
+        "environment_version": "5"
+      }
+    }
+  ],
+  "performance_target": "PERFORMANCE_OPTIMIZED"
+}
