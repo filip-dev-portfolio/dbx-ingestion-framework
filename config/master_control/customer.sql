@@ -1,6 +1,16 @@
+%sql
 MERGE INTO workspace.cfg_sch.master_control AS target
 USING (
-    SELECT * FROM VALUES
+    SELECT 
+        col1 AS workflowId,
+        col2 AS layer,
+        col3 AS sourceTable,
+        col4 AS targetTable,
+        col5 AS loadType,
+        col6 AS archive,
+        col7 AS mergeKeys,
+        col8 AS colMapping
+    FROM VALUES
     (
         'f51e7d02-795f-4d59-bef9-ce62282f39ee',
         'BRONZE',
@@ -66,16 +76,7 @@ USING (
           "sourceQuery": "SELECT customerID,first_name,last_name,email_address,country,continent FROM workspace.s_sch.customer"
         }'
     )
-) AS source (
-    workflowId,
-    layer,
-    sourceTable,
-    targetTable,
-    loadType,
-    archive,
-    mergeKeys,
-    colMapping
-)
+) AS source
 ON target.workflowId = source.workflowId
 AND target.layer = source.layer
 
@@ -108,4 +109,4 @@ VALUES (
     source.archive,
     source.mergeKeys,
     source.colMapping
-);
+)
