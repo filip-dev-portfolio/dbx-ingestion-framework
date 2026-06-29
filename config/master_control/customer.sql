@@ -1,4 +1,3 @@
-%sql
 MERGE INTO workspace.cfg_sch.master_control AS target
 USING (
     SELECT 
